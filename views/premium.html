@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Premium Dashboard - Expense Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 70%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 8px 16px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .app-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .app-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(245, 87, 108, 0.3);
+        }
+
+        .app-icon i {
+            font-size: 1.4rem;
+            color: white;
+        }
+
+        .app-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .premium-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 8px rgba(245, 87, 108, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 8px 16px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 12px 24px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .icon-report {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .icon-leaderboard {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .icon-download {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            box-shadow: 0 6px 12px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 16px rgba(72, 187, 120, 0.4);
+        }
+
+        .report-section {
+            margin-bottom: 2rem;
+        }
+
+        .report-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+
+        .date-inputs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .date-input {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 400;
+            background: #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .leaderboard-item {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            background: #f3f4f6;
+            transform: translateX(4px);
+        }
+
+        .leaderboard-name {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .leaderboard-amount {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .download-section {
+            text-align: center;
+        }
+
+        .download-info {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .expense-form-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 8px 16px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 400;
+            background: #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .submit-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .expenses-section {
+            margin-top: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: #667eea;
+        }
+
+        .expense-item {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .expense-item:hover {
+            background: #f3f4f6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .expense-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .expense-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .expense-amount {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.25rem;
+        }
+
+        .expense-description {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .expense-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #9ca3af;
+        }
+
+        .expense-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .btn-edit:hover {
+            background: #fde68a;
+        }
+
+        .btn-delete {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-delete:hover {
+            background: #fecaca;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-btn {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem 0.5rem;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .date-inputs {
+                flex-direction: column;
+            }
+
+            .card, .expense-form-card {
+                padding: 1.5rem;
+            }
+
+            .form {
+                grid-template-columns: 1fr;
+            }
+
+            .expense-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .expense-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .pagination {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="app-title">
+                <div class="app-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h1>Premium Dashboard</h1>
+            </div>
+            <div class="premium-badge">
+                <i class="fas fa-star"></i>
+                Premium Member
+            </div>
+        </div>
+
+        <!-- Expense Form Section -->
+        <div class="expense-form-card">
+            <h2 class="section-title">
+                <i class="fas fa-plus-circle"></i>
+                Add New Expense
+            </h2>
+            
+            <form id="expenseForm" class="form">
+                <div class="form-group">
+                    <input type="number" class="form-input" id="amount" placeholder="Amount (₹)" required />
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-input" id="description" placeholder="Description" required />
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-input" id="note" placeholder="Note (Optional)" />
+                </div>
+                <div class="form-group">
+                    <select id="category" class="form-select" required>
+                        <option disabled selected>Choose Category</option>
+                        <option>Food</option>
+                        <option>Petrol</option>
+                        <option>Shopping</option>
+                        <option>Entertainment</option>
+                        <option>Travel</option>
+                        <option>Education</option>
+                        <option>Healthcare</option>
+                        <option>Salary</option>
+                        <option>Rent</option>
+                        <option>Others</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="date" class="form-input" id="date" required />
+                </div>
+                <div class="form-group">
+                    <input type="time" class="form-input" id="time" required />
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-plus"></i> Add Expense
+                </button>
+            </form>
+
+            <div class="expenses-section">
+                <h3 class="section-title">
+                    <i class="fas fa-list"></i>
+                    Recent Expenses
+                </h3>
+                <div id="expenseList"></div>
+
+                <div class="pagination">
+                    <div class="pagination-info">
+                        <label>Show:</label>
+                        <select id="pageSize" class="form-select" style="width: auto; min-width: 80px;">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                        </select>
+                    </div>
+                    <div class="pagination-controls">
+                        <button id="prevPage" class="page-btn">Previous</button>
+                        <span id="pageInfo" class="page-info"></span>
+                        <button id="nextPage" class="page-btn">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Reports Section -->
+            <div class="card">
+                <h2 class="card-title">
+                    <div class="card-icon icon-report">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    Expense Reports
+                </h2>
+                
+                <div class="report-section">
+                    <div class="report-title">Daily Reports</div>
+                    <div class="date-inputs">
+                        <div class="date-input">
+                            <input type="date" id="dailyDate" class="form-input" />
+                        </div>
+                    </div>
+                    <button id="downloadDailyReport" class="btn">
+                        <i class="fas fa-download"></i>
+                        Download Daily Report
+                    </button>
+                </div>
+
+                <div class="report-section">
+                    <div class="report-title">Monthly Reports</div>
+                    <div class="date-inputs">
+                        <div class="date-input">
+                            <input type="month" id="monthlyDate" class="form-input" />
+                        </div>
+                    </div>
+                    <button id="downloadMonthlyReport" class="btn">
+                        <i class="fas fa-download"></i>
+                        Download Monthly Report
+                    </button>
+                </div>
+
+                <div class="report-section">
+                    <div class="report-title">Yearly Reports</div>
+                    <div class="date-inputs">
+                        <div class="date-input">
+                            <input type="number" id="yearlyDate" class="form-input" placeholder="Enter Year (e.g., 2024)" min="2020" max="2030" />
+                        </div>
+                    </div>
+                    <button id="downloadYearlyReport" class="btn">
+                        <i class="fas fa-download"></i>
+                        Download Yearly Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Leaderboard Section -->
+            <div class="card">
+                <h2 class="card-title">
+                    <div class="card-icon icon-leaderboard">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    Expense Leaderboard
+                </h2>
+                <div id="leaderboard">
+                    <div class="leaderboard-item">
+                        <span class="leaderboard-name">Loading...</span>
+                        <span class="leaderboard-amount">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download All Data Section -->
+            <div class="card">
+                <h2 class="card-title">
+                    <div class="card-icon icon-download">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    Export Data
+                </h2>
+                <div class="download-section">
+                    <p class="download-info">
+                        Download all your expense data in CSV format for external analysis or backup purposes.
+                    </p>
+                    <button id="downloadAllExpenses" class="btn btn-secondary">
+                        <i class="fas fa-file-csv"></i>
+                        Download All Expenses
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/premium.js"></script>
+</body>
+</html>
